@@ -21,6 +21,8 @@ def main():
 
     model, device  = load_model_quantized(model_id, quantized)
     tokenizer = AutoTokenizer.from_pretrained(model_id)
+    if tokenizer.pad_token is None:
+            tokenizer.pad_token = tokenizer.eos_token
 
     while True:
         # User input
@@ -37,7 +39,7 @@ def main():
 
         model_inputs = encodeds.to(device)
         
-        generated_ids = model.generate(model_inputs, max_new_tokens = 1000, do_sample=True)
+        generated_ids = model.generate(model_inputs, pad_token_id=tokenizer.pad_token_id, max_new_tokens = 1000, do_sample=True)
         decoded = tokenizer.batch_decode(generated_ids)
         print("Model: ", decoded[0])
 
