@@ -1,8 +1,7 @@
-from transformers import AutoModelForCausalLM, AutoTokenizer
-import torch
+from transformers import AutoModelForCausalLM, AutoTokenizer, AutoDevice
 
 def load_model_quantized(model_id, quantized = True):
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    device = AutoDevice
     model = AutoModelForCausalLM.from_pretrained(model_id, device_map='auto', load_in_8bit=quantized)
     print(f"Model Size: {model.get_memory_footprint():,} bytes")
     return model, device
@@ -43,5 +42,4 @@ def main():
         print("Model: ", decoded[0])
 
 if __name__ == "__main__":
-    print(torch.__version__)
     main()
