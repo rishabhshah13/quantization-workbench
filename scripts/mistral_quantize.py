@@ -20,7 +20,6 @@ def main():
         print("Invalid input. Please type 'yes' or 'no'.")
 
     model, device  = load_model_quantized(model_id, quantized)
-    model.to(device)
     tokenizer = AutoTokenizer.from_pretrained(model_id)
 
     while True:
