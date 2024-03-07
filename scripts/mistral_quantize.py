@@ -8,7 +8,7 @@ def load_model_quantized(model_id, quantized = True):
     return model, device
 
 def main():
-    model_id = "mistralai/Mistral-7B-v0.1"
+    model_id = "mistralai/Mistral-7B-Instruct-v0.2"
     
     # Prompt user for quantized model usage
     quantized_input = input("Do you want to use the quantized version of the model? (yes/no): ").strip().lower()
@@ -31,14 +31,17 @@ def main():
             print("Exiting...")
             break
 
-        # Encode user input directly
-        encoded_input = tokenizer(user_input, return_tensors="pt").to(device)
-        
-        # Generate response
-        generated_ids = model.generate(encoded_input, pad_token_id=tokenizer.pad_token_id, max_length=1000, do_sample=True)
-        decoded = tokenizer.batch_decode(generated_ids, skip_special_tokens=True)
-        print("Model:", decoded[0])
+        messages = [
+            {"role": "user", "content": user_input}
+        ]
 
+        encodeds = tokenizer.apply_chat_template(messages, return_tensors="pt")
+
+        model_inputs = encodeds.to(device)
+        
+        generated_ids = model.generate(model_inputs, pad_token_id=tokenizer.pad_token_id, max_new_tokens = 1000, do_sample=True)
+        decoded = tokenizer.batch_decode(generated_ids)
+        print("Model: ", decoded[0])
 
 if __name__ == "__main__":
     main()
