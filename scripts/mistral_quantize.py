@@ -8,7 +8,7 @@ def load_model_quantized(model_id, quantized = True):
     return model, device
 
 def main():
-    model_id = "mistralai/Mistral-7B-Instruct-v0.2"
+    model_id = "mistralai/Mistral-7B-v0.1"
     
     # Prompt user for quantized model usage
     quantized_input = input("Do you want to use the quantized version of the model? (yes/no): ").strip().lower()
