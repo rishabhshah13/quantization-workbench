@@ -31,17 +31,14 @@ def main():
             print("Exiting...")
             break
 
-        messages = [
-            {"role": "user", "content": user_input}
-        ]
-
-        encodeds = tokenizer.apply_chat_template(messages, return_tensors="pt")
-
-        model_inputs = encodeds.to(device)
+        # Encode user input directly
+        encoded_input = tokenizer(user_input, return_tensors="pt").to(device)
         
-        generated_ids = model.generate(model_inputs, pad_token_id=tokenizer.pad_token_id, max_new_tokens = 1000, do_sample=True)
-        decoded = tokenizer.batch_decode(generated_ids)
-        print("Model: ", decoded[0])
+        # Generate response
+        generated_ids = model.generate(encoded_input, pad_token_id=tokenizer.pad_token_id, max_length=1000, do_sample=True)
+        decoded = tokenizer.batch_decode(generated_ids, skip_special_tokens=True)
+        print("Model:", decoded[0])
+
 
 if __name__ == "__main__":
     main()
