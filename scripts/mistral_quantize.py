@@ -1,4 +1,4 @@
-from transformers import AutoModelForCausalLM, AutoTokenizer
+from transformers import AutoModelForCausalLM, AutoTokenizer, pipeline
 import torch
 from transformers import BitsAndBytesConfig
 from torch import bfloat16
