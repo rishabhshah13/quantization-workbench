@@ -3,11 +3,11 @@ import torch
 
 def load_model_quantized(model_id, quantized = True, bit_count = None):
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    if bit_count = 8:
+    if bit_count == 8:
         model = AutoModelForCausalLM.from_pretrained(model_id, device_map='auto', load_in_8bit=quantized)
-    if bit_count = 16:
+    if bit_count == 16:
         model = AutoModelForCausalLM.from_pretrained(model_id, device_map='auto', torch_dtype=torch.float16)
-    if bit_count = 32:
+    if bit_count == 32:
         model = AutoModelForCausalLM.from_pretrained(model_id, device_map='auto', torch_dtype=torch.float32)
     print(f"Model Size: {model.get_memory_footprint():,} bytes")
     return model, device
