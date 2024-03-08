@@ -1,32 +1,27 @@
 from transformers import AutoModelForCausalLM, AutoTokenizer
 import torch
 
-def load_model_quantized(model_id, quantized = True, bit_count = None):
+def load_model_quantized(model_id, bit_count = None):
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     if bit_count == 8:
-        model = AutoModelForCausalLM.from_pretrained(model_id, device_map='auto', load_in_8bit=quantized)
+        model = AutoModelForCausalLM.from_pretrained(model_id, device_map='auto', load_in_8bit=True)
     if bit_count == 16:
         model = AutoModelForCausalLM.from_pretrained(model_id, device_map='auto', torch_dtype=torch.float16)
     if bit_count == 32:
         model = AutoModelForCausalLM.from_pretrained(model_id, device_map='auto', torch_dtype=torch.float32)
+    else:
+        print("Bit count not valid, loading in int8 model")
+        model = AutoModelForCausalLM.from_pretrained(model_id, device_map='auto', load_in_8bit=True)
     print(f"Model Size: {model.get_memory_footprint():,} bytes")
     return model, device
 
 def main():
     model_id = "mistralai/Mistral-7B-Instruct-v0.2"
     
-    # Prompt user for quantized model usage
-    quantized_input = input("Do you want to use the quantized version of the model? (yes/no): ").strip().lower()
-    if quantized_input in {"yes", "y"}:
-        quantized = True
-    elif quantized_input in {"no", "n"}:
-        quantized = False
-    else:
-        print("Invalid input. Please type 'yes' or 'no'.")
-    bit_input = input("What bit size would you like to load in for weights? (8, 16, 32: ")
+    bit_input = input("What bit size would you like to load in for weights? (8, 16, 32): ")
     
 
-    model, device  = load_model_quantized(model_id, quantized, bit_input)
+    model, device  = load_model_quantized(model_id, bit_input)
     tokenizer = AutoTokenizer.from_pretrained(model_id)
     if tokenizer.pad_token is None:
             tokenizer.pad_token = tokenizer.eos_token
