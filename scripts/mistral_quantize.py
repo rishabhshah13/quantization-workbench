@@ -23,8 +23,10 @@ def main():
         quantized = False
     else:
         print("Invalid input. Please type 'yes' or 'no'.")
+    bit_input = input("What bit size would you like to load in for weights? (8, 16, 32: ")
+    
 
-    model, device  = load_model_quantized(model_id, quantized)
+    model, device  = load_model_quantized(model_id, quantized, bit_input)
     tokenizer = AutoTokenizer.from_pretrained(model_id)
     if tokenizer.pad_token is None:
             tokenizer.pad_token = tokenizer.eos_token
