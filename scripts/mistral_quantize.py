@@ -19,7 +19,7 @@ def main():
     model_id = "mistralai/Mistral-7B-Instruct-v0.2"
     
     bit_input = input("What bit size would you like to load in for weights? (8, 16, 32): ")
-    
+    print("Bits chosen: ", bit_input)
 
     model, device  = load_model_quantized(model_id, bit_input)
     tokenizer = AutoTokenizer.from_pretrained(model_id)
