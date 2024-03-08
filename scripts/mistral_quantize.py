@@ -12,6 +12,7 @@ def load_model_quantized(model_id, quantized = True):
 def main():
     model_id = "mistralai/Mistral-7B-Instruct-v0.2"
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    print("Device: ", device)
     # Prompt user for quantized model usage
 #     quantized_input = input("Do you want to use the quantized version of the model? (yes/no): ").strip().lower()
 #     if quantized_input in {"yes", "y"}:
