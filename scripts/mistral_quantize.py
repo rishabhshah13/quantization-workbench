@@ -18,8 +18,10 @@ def load_model_quantized(model_id, bit_count = None):
 def main():
     model_id = "mistralai/Mistral-7B-Instruct-v0.2"
     
-    bit_input = input("What bit size would you like to load in for weights? (8, 16, 32): ")
-    print("Bits chosen: ", bit_input)
+    bit_input = int(input("Enter the number of bits (8, 16, or 32): "))
+    if bit_input not in [8, 16, 32]:
+        print("Invalid bit count. Loading model in int8 (8-bit) mode by default.")
+        bit_input = 8
 
     model, device  = load_model_quantized(model_id, bit_input)
     tokenizer = AutoTokenizer.from_pretrained(model_id)
