@@ -33,7 +33,7 @@ def main():
         quantization_config=bnb_config,
         device_map='auto'
     )
-    
+    print(f"Model Size: {model.get_memory_footprint():,} bytes")
     if tokenizer.pad_token is None:
             tokenizer.pad_token = tokenizer.eos_token
             
