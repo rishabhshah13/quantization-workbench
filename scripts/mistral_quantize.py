@@ -1,8 +1,18 @@
-from transformers import AutoModelForCausalLM, AutoTokenizer
+from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
 import torch
 
 def load_model_quantized(model_id, bit_count = None):
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
+    bnb_config = BitsAndBytesConfig()
+    if bit_count == 4:
+        nf4_config = BitsAndBytesConfig(
+            load_in_4bit=True,
+            bnb_4bit_quant_type="nf4",
+            bnb_4bit_use_double_quant=True,
+            bnb_4bit_compute_dtype=torch.bfloat16
+        )
+        model = AutoModelForCausalLM.from_pretrained(model_id, device_map='auto', quantization_config = nf4_config)
     if bit_count == 8:
         model = AutoModelForCausalLM.from_pretrained(model_id, device_map='auto', load_in_8bit=True)
     if bit_count == 16:
