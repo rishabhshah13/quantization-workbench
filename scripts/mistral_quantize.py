@@ -21,14 +21,16 @@ def load_model_quantized(model_id, bit_count = None):
         model = AutoModelForCausalLM.from_pretrained(model_id, device_map='auto', quantization_config=nf8_config)
     if bit_count == 16:
         model = AutoModelForCausalLM.from_pretrained(model_id, device_map='auto', torch_dtype=torch.float16)
+    if bit_count == 32:
+        model = AutoModelForCausalLM.from_pretrained(model_id, device_map='auto')
     print(f"Model Size: {model.get_memory_footprint():,} bytes")
     return model, device
 
 def main():
     model_id = "mistralai/Mistral-7B-Instruct-v0.2"
     
-    bit_input = int(input("Enter the number of bits (4, 8, or 16): "))
-    if bit_input not in [4, 8, 16]:
+    bit_input = int(input("Enter the number of bits 4, 8, 16, or 32 (un-quantized): "))
+    if bit_input not in [4, 8, 16, 32]:
         print("Invalid bit count. Loading model in int8 (8-bit) mode by default.")
         bit_input = 8
 
