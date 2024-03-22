@@ -1,5 +1,7 @@
 from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
 import torch
+import os
+from huggingface_hub import login
 
 def load_model_quantized(model_id, bit_count = None):
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -33,6 +35,19 @@ def main():
         bit_input = 8
 
     model, device  = load_model_quantized(model_id, bit_input)
+
+    model_key = f"{model_id}-{bit_input}-bit-quantized"
+    if os.path.isfile("saved_models.txt"):
+        with open("saved_models.txt", "r+") as file:
+            if model_key in file.read():
+                print("Model already saved to HuggingFace")
+            else:
+                login()
+                model.push_to_hub(model_key)
+                file.write(model_key+ "\n")
+                print(f"{model_key} added to saved_models.txt")
+
+
     tokenizer = AutoTokenizer.from_pretrained(model_id)
     if tokenizer.pad_token is None:
             tokenizer.pad_token = tokenizer.eos_token
