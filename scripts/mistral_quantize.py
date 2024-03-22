@@ -37,6 +37,7 @@ def main():
     model, device  = load_model_quantized(model_id, bit_input)
 
     model_key = f"{model_id}-{bit_input}-bit-quantized"
+    model_key = model_key[model_key.rfind('/') + 1:]
     if os.path.isfile("saved_models.txt"):
         with open("saved_models.txt", "r+") as file:
             if model_key in file.read():
