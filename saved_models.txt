@@ -1,0 +1,2 @@
+Mistral-7B-Instruct-v0.2-4-bit-quantized
+Mistral-7B-Instruct-v0.2-8-bit-quantized
