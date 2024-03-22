@@ -3,8 +3,7 @@ import torch
 
 def load_model_quantized(model_id, bit_count = None):
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-
-    bnb_config = BitsAndBytesConfig()
+    print("Bits Selected ", bit_count)
     if bit_count == 4:
         nf4_config = BitsAndBytesConfig(
             load_in_4bit=True,
@@ -14,14 +13,14 @@ def load_model_quantized(model_id, bit_count = None):
         )
         model = AutoModelForCausalLM.from_pretrained(model_id, device_map='auto', quantization_config = nf4_config)
     if bit_count == 8:
-        model = AutoModelForCausalLM.from_pretrained(model_id, device_map='auto', load_in_8bit=True)
+        nf8_config = BitsAndBytesConfig(
+            load_in_8bit=True
+        )
+        model = AutoModelForCausalLM.from_pretrained(model_id, device_map='auto', quantization_config=nf8_config)
     if bit_count == 16:
         model = AutoModelForCausalLM.from_pretrained(model_id, device_map='auto', torch_dtype=torch.float16)
     if bit_count == 32:
         model = AutoModelForCausalLM.from_pretrained(model_id, device_map='auto', torch_dtype=torch.float32)
-    else:
-        print("Bit count not valid, loading in int8 model")
-        model = AutoModelForCausalLM.from_pretrained(model_id, device_map='auto', load_in_8bit=True)
     print(f"Model Size: {model.get_memory_footprint():,} bytes")
     return model, device
 
