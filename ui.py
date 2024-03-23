@@ -3,6 +3,8 @@ from gradio import components
 from scripts.mistral_quantize import load_model_quantized
 
 def get_model_output(user_input, model_name, bit_count):
+    model = None
+    device = None
     try:
         model, device = load_model_quantized(model_name, bit_count)
         tokenizer = AutoTokenizer.from_pretrained(model_name)
@@ -16,7 +18,11 @@ def get_model_output(user_input, model_name, bit_count):
         decoded = tokenizer.batch_decode(generated_ids)
         return decoded[0]
     except Exception as e:
+        print(f"An error occurred while loading the model or generating output: {str(e)}")
+        print(f"Model: {model}")
+        print(f"Device: {device}")
         raise gr.Error(f"An error occurred: {str(e)}")
+
 
 def compare_models(user_input, model_name, bit_counts):
     outputs = {}
