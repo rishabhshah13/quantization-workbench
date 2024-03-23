@@ -11,12 +11,13 @@ class mModel:
         self.quantization = quantization
         self.model_id = "mistralai/Mistral-7B-Instruct-v0.2"
         self.tokenizer = None
-        self.device = 'cpu'
-        
-    
-    def load(self):
-        # load model in this one
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        self.model = None
+        print(f"Initializing Model: {self.model_name}. Using {self.device}")
+    
+    
+    def load_bnb(self):
+        # load model in this one
         print("Bits Selected ", self.quantization)
         if self.quantization == 4:
             nf4_config = BitsAndBytesConfig(
@@ -25,7 +26,7 @@ class mModel:
                 bnb_4bit_use_double_quant=True,
                 bnb_4bit_compute_dtype=torch.bfloat16
             )
-            model = AutoModelForCausalLM.from_pretrained(self.model_id, device_map='mps', quantization_config = nf4_config)
+            model = AutoModelForCausalLM.from_pretrained(self.model_id, device_map='auto', quantization_config = nf4_config)
         if self.quantization == 8:
             nf8_config = BitsAndBytesConfig(
                 load_in_8bit=True
@@ -35,8 +36,13 @@ class mModel:
             model = AutoModelForCausalLM.from_pretrained(self.model_id, device_map='auto', torch_dtype=torch.float16)
         if self.quantization == 32:
             model = AutoModelForCausalLM.from_pretrained(self.model_id, device_map='auto')
-        print(f"Model Size: {model.get_memory_footprint():,} bytes")
-        return model
+
+        print(f"Model Size: {model.get_memory_footprint() / (1024**3) :,} GB")
+
+        self.model = model
+    
+        # return model
+    
 
     def _load_tokenizer(self):
         self.tokenizer = AutoTokenizer.from_pretrained(self.model_id)
@@ -44,10 +50,8 @@ class mModel:
                 self.tokenizer.pad_token = self.tokenizer.eos_token
     
 
-
     def start_inference(self):
-        # input text and get output
-        
+
         self._load_tokenizer()
 
         while True:
@@ -60,10 +64,27 @@ class mModel:
             messages = [
                 {"role": "user", "content": user_input}
             ]
-            encodeds = self.tokenizer.apply_chat_template(messages, return_tensors="pt")
+            encoded_string = self.tokenizer.apply_chat_template(messages, return_tensors="pt")
 
-            model_inputs = encodeds.to(self.device)
+            model_inputs = encoded_string.to(self.device)
             
             generated_ids = self.model.generate(model_inputs, pad_token_id=self.tokenizer.pad_token_id, max_new_tokens = 1000, do_sample=True)
             decoded = self.tokenizer.batch_decode(generated_ids)
-            print("Model: ", decoded[0])
+            print("Model: ", decoded[0])    
+    
+    
+    def single_inference(self,text):
+        
+        self._load_tokenizer()
+
+        messages = [
+            {"role": "user", "content": text}
+        ]
+        encoded_string = self.tokenizer.apply_chat_template(messages, return_tensors="pt")
+
+        model_inputs = encoded_string.to(self.device)
+        
+        generated_ids = self.model.generate(model_inputs, pad_token_id=self.tokenizer.pad_token_id, max_new_tokens = 1000, do_sample=True)
+        decoded = self.tokenizer.batch_decode(generated_ids)
+        print("Model: ", decoded[0])    
+    
