@@ -22,3 +22,6 @@ conda activate "/Users/rishabhshah/Desktop/quantization-workbench/wincondaprojen
 pip3 install torch torchvision torchaudio   
 pip install transformers==4.37.0 bitsandbytes==0.42.0 accelerate==0.27.2 ipywidgets
 ```
+
+
+pip install autoawq-kernels
