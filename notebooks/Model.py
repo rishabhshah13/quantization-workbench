@@ -1,51 +1,54 @@
-from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
-import torch
-import os
-from huggingface_hub import login
+from scripts.mistral_quantize import load_model_quantized, load_tokenizer  # Import functions for loading quantized model and tokenizer
+from transformers import AutoTokenizer  # Import AutoTokenizer for tokenization
 
 class Model:
-
-    def __init__(self,model_name,quantization):
-
-        self.model_name = model_name
-        self.quantization = quantization
-        self.model_id = "mistralai/Mistral-7B-Instruct-v0.2"
-        self.tokenizer = None
-        self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-        self.model = None
-        print(f"Initializing Model: {self.model_name}")
+    """Class to handle interaction with the language model."""
     
+    def __init__(self, model_name, bit_count, model_context):
+        """
+        Initialize the Model instance.
+        
+        Parameters:
+        - model_name (str): Name of the pre-trained language model.
+        - bit_count (int): Number of bits for quantization.
+        - model_context (list): Context information for the model.
+        """
+        # Load the quantized model and set device
+        self.model, self.device = load_model_quantized(model_name, bit_count)
+        
+        # Load the tokenizer
+        self.tokenizer = load_tokenizer(model_name)
+        self.tokenizer = AutoTokenizer.from_pretrained(model_name)
+        
+        # Initialize model context
+        if model_context is None: 
+            self.context = []
+        else:
+            self.context = model_context
 
-    def load_bnb(self):
-        # load model in this one
-        print("Bits Selected ", self.quantization)
-        if self.quantization == 4:
-            nf4_config = BitsAndBytesConfig(
-                load_in_4bit=True,
-                bnb_4bit_quant_type="nf4",
-                bnb_4bit_use_double_quant=True,
-                bnb_4bit_compute_dtype=torch.bfloat16
-            )
-            model = AutoModelForCausalLM.from_pretrained(self.model_id, device_map='auto', quantization_config = nf4_config)
-        if self.quantization == 8:
-            nf8_config = BitsAndBytesConfig(
-                load_in_8bit=True
-            )
-            model = AutoModelForCausalLM.from_pretrained(self.model_id, device_map='auto', quantization_config=nf8_config)
-        if self.quantization == 16:
-            model = AutoModelForCausalLM.from_pretrained(self.model_id, device_map='auto', torch_dtype=torch.float16)
-        if self.quantization == 32:
-            model = AutoModelForCausalLM.from_pretrained(self.model_id, device_map='auto')
-
-        print(f"Model Size: {model.get_memory_footprint() / (1024**3) :,} GB")
-
-        self.model = model
-    
-        # return model
-    
-    def _load_tokenizer(self):
-        self.tokenizer = AutoTokenizer.from_pretrained(self.model_id)
-        if self.tokenizer.pad_token is None:
-                self.tokenizer.pad_token = self.tokenizer.eos_token
-    
-    
+    def get_output(self, user_input):
+        """
+        Generate model output based on user input.
+        
+        Parameters:
+        - user_input (str): User input text.
+        
+        Returns:
+        - str: Generated text response from the model.
+        """
+        # Append user input to context
+        self.context.append({"role": "user", "content": user_input})
+        print(self.context)
+        
+        # Tokenize input and prepare model inputs
+        encodeds = self.tokenizer.apply_chat_template(self.context, return_tensors="pt")
+        model_inputs = encodeds.to(self.device)
+        
+        # Generate response from the model
+        generated_ids = self.model.generate(model_inputs, pad_token_id=self.tokenizer.pad_token_id, max_new_tokens=1000, do_sample=True)
+        decoded = self.tokenizer.batch_decode(generated_ids, clean_up_tokenization_spaces=True)
+        
+        # Append model output to context
+        self.context.append({"role": "assistant", "content": decoded[0]})
+        
+        return decoded[0]  # Return the generated response
