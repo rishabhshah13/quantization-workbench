@@ -50,7 +50,13 @@ def calculate_perplexity(model, test_text):
     perplexity = math.exp(-log_prob / count) if count > 0 else float('inf')
     return perplexity
 
-def main(input_text, test_text, start_word):
+def main():
+    ## Parameters needed: input_text, test_text, start_word
+
+    input_text = "the cat in the hat"
+    test_text = "the cat in the hat"
+    start_word = "the"
+
     # Build the Markov chain model
     model = build_markov_chain(input_text)
     
@@ -63,3 +69,5 @@ def main(input_text, test_text, start_word):
     perplexity = calculate_perplexity(model, test_text)
     print("\nModel Perplexity on Test Text:", perplexity)
 
+if __name__ == "__main__":
+    main()
