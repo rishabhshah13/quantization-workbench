@@ -1,6 +1,12 @@
 import gradio as gr
 from gradio import components
 from scripts.mistral_quantize import load_model_quantized
+from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
+import torch
+import os
+from huggingface_hub import login
+import traceback
+
 
 def get_model_output(user_input, model_name, bit_count):
     model = None
@@ -26,9 +32,13 @@ def get_model_output(user_input, model_name, bit_count):
 
 def compare_models(user_input, model_name, bit_counts):
     outputs = {}
-    for bit_count in bit_counts:
-        key = f"{model_name}-{bit_count}-bit-quantized"
-        outputs[key] = get_model_output(user_input, model_name, bit_count)
+    try:
+        for bit_count in bit_counts:
+            key = f"{model_name}-{bit_count}-bit-quantized"
+            outputs[key] = get_model_output(user_input, model_name, bit_count)
+    except Exception as e:
+        print(e)
+        traceback.print_exc()
     return outputs
 
 
