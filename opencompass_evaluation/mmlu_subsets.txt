@@ -1,0 +1,57 @@
+Abstract Algebra
+Anatomy
+Astronomy
+Business Ethics
+Clinical Knowledge
+College Biology
+College Chemistry
+College Computer Science
+College Mathematics
+College Medicine
+College Physics
+Computer Security
+Conceptual Physics
+Econometrics
+Electrical Engineering
+Elementary Mathematics
+Formal Logic
+Global Facts
+High School Biology
+High School Chemistry
+High School Computer Science
+High School European History
+High School Geography
+High School Gov't and Politics
+High School Macroeconomics
+High School Mathematics
+High School Microeconomics
+High School Physics
+High School Psychology
+High School Statistics
+High School US History
+High School World History
+Human Aging
+Human Sexuality
+International Law
+Jurisprudence
+Logical Fallacies
+Machine Learning
+Management
+Marketing
+Medical Genetics
+Miscellaneous
+Moral Disputes
+Moral Scenarios
+Nutrition
+Philosophy
+Prehistory
+Professional Accounting
+Professional Law
+Professional Medicine
+Professional Psychology
+Public Relations
+Security Studies
+Sociology
+US Foreign Policy
+Virology
+World Religions

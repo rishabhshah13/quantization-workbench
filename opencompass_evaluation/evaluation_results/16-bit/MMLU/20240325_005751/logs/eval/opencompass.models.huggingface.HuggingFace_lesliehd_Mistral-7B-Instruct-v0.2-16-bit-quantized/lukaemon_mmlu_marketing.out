@@ -1,0 +1,5 @@
+2024-03-25 04:50:11.562000: I tensorflow/core/platform/cpu_feature_guard.cc:182] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: AVX2 AVX512F FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2024-03-25 04:50:16.866180: W tensorflow/compiler/tf2tensorrt/utils/py_utils.cc:38] TF-TRT Warning: Could not find TensorRT
+03/25 04:50:31 - OpenCompass - INFO - Task [opencompass.models.huggingface.HuggingFace_lesliehd_Mistral-7B-Instruct-v0.2-16-bit-quantized/lukaemon_mmlu_marketing]: {'accuracy': 85.04273504273505}
+03/25 04:50:31 - OpenCompass - INFO - time elapsed: 25.81s
