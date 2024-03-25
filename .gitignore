@@ -5,3 +5,4 @@ __pycache__/*
 flagged/*
 scripts/__pycache__/*
 ui_backup.py
+opencompass_evaluation/evaluation_results/16-bit/CommonsenseQA/20240324_231719/*
