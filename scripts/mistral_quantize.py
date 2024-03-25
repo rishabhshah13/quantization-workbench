@@ -44,6 +44,11 @@ def load_model_quantized(model_id, bit_count = None):
         print(f"Model Size: {model.get_memory_footprint():,} bytes")
     return model, device
 
+def load_tokenizer(model_id):
+    tokenizer = AutoTokenizer.from_pretrained(model_id)
+    if tokenizer.pad_token is None:
+            tokenizer.pad_token = tokenizer.eos_token
+            
 def main():
     model_id = "mistralai/Mistral-7B-Instruct-v0.2"
     
