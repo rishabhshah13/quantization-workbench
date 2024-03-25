@@ -5,25 +5,43 @@ from model import Model  # Import the Model class
 import traceback
 
 models = {}
+context = {}
 
 def compare_models(user_input, model_name, bit_counts):
     outputs = [None] * 4  # Initialize a list of 4 None values
     try:
         for i, bit_count in enumerate(bit_counts):
+            
             key = f"{model_name}-{bit_count}-bit-quantized"
+
+            if key in context.keys():
+                model_context  = context[key]
+            else:
+                model_context = None
+
             if key not in models:
-                models[key] = Model(model_name, int(bit_count))
+                models[key] = Model(model_name, int(bit_count),model_context)
             outputs[i] = models[key].get_output(user_input)
+            
+            if key in context.keys():
+                context[key] = models[key].context
+                
+            else:
+                context[key] = models[key].context
+                
+            del models[key]
+            
     except Exception as e:
         print(e)
         traceback.print_exc()
     return tuple(outputs)  # Convert the list to a tuple
 
 inputs=[
-    "text", 
-    gr.Dropdown(["mistralai/Mistral-7B-Instruct-v0.2", "mistralai/Mistral-7B", "other_model"]), 
+    "text",
+    gr.Dropdown(["mistralai/Mistral-7B-Instruct-v0.2", "mistralai/Mistral-7B", "other_model"]),
     gr.CheckboxGroup(["4", "8", "16", "32"]),
 ]
+
 
 outputs = [gr.Textbox() for _ in range(4)]  # Adjust this number based on the maximum number of models you expect to compare
 
@@ -37,3 +55,4 @@ iface1 = gr.Interface(
 
 if __name__ == "__main__":
     iface1.launch(debug=True)
+
