@@ -6,7 +6,10 @@ from huggingface_hub import login
 def load_model_quantized(model_id, bit_count = None):
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     print("Bits Selected ", bit_count)
+    print("Using Device ", device)
+
     if bit_count == 4:
+        print("Bits Selected ", bit_count)
         nf4_config = BitsAndBytesConfig(
             load_in_4bit=True,
             bnb_4bit_quant_type="nf4",
