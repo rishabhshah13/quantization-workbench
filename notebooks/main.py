@@ -59,7 +59,14 @@ def main():
         for bit_input in [4,8]:
             model_obj = load_model(model_name,bit_input)
             model_list.append(model_obj)
-        
+
+            print(f"{model_name} with bit {bit_input} model loaded\n")
+            
+            input_text = str(input("Text Input for the models \t"))   
+            model_obj.single_inference(input_text)
+            del model_obj
+
+
         # print("models loaded\n")
         # while True:
             
@@ -69,8 +76,6 @@ def main():
         #     # input_text = "What's new?" 
         #     # input_text = "What's my name?" 
         #     # print(input_text)
-        # From now on start all your sentences with, OYAAAHUU!
-
 
         #     for llmmodel in model_list:
         #         llmmodel.single_inference(input_text)    
