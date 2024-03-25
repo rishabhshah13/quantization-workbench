@@ -53,9 +53,11 @@ def calculate_perplexity(model, test_text):
 def main():
     ## Parameters needed: input_text, test_text, start_word
 
-    input_text = "the cat in the hat"
-    test_text = "the cat in the hat"
-    start_word = "the"
+    with open('./wikipedia_data.txt', 'r', encoding='utf-8') as file:
+        input_text = file.read()
+
+    test_text = "since she was a kid"
+    start_word = "since"
 
     # Build the Markov chain model
     model = build_markov_chain(input_text)
