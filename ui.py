@@ -2,7 +2,7 @@
 
 import gradio as gr  # Import Gradio library for building UI
 import traceback  # Import traceback module for error handling
-from scripts import model # Import the Model class from model.py
+from scripts.Model import Model # Import the Model class from model.py
 
 models = {}  # Dictionary to store instantiated models
 context = {}  # Dictionary to store context information for each model

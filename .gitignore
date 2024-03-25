@@ -3,3 +3,4 @@ wslenv/*
 notebooks/__pycache__/*
 __pycache__/*
 flagged/*
+scripts/__pycache__/*
