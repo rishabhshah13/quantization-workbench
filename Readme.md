@@ -6,22 +6,42 @@
 ```bash
 conda create --prefix "C:\\Users\\rs659\\Desktop\\quantization-workbench\\wincondaprojenv" python=3.9
 conda activate "C:\\Users\\rs659\\Desktop\\quantization-workbench\\wincondaprojenv"
-<!-- pip install gdown cython==3.0.9 numpy==1.23.5 ninja ultralytics==8.1.29 pillow pylabel==0.1.55 kiwisolver==1.4.5 pandas==2.2.1 -->
 pip install torch==2.1.0 torchvision==0.16.0 torchaudio==2.1.0 --index-url https://download.pytorch.org/whl/cu121
 pip install transformers==4.37.0 bitsandbytes==0.42.0 accelerate==0.27.2 ipywidgets
 onda install cudatoolkit
 conda install cudnn
+
+!git clone https://github.com/casper-hansen/AutoAWQ_kernels 
+cd AutoAWQ_kernels 
+!pip install -e . 
 ```
 
 
+
+
+
+## MacOS Installation Instructions
 ```bash
 conda create --prefix "/Users/rishabhshah/Desktop/quantization-workbench/wincondaprojenv" python=3.9
 conda activate "/Users/rishabhshah/Desktop/quantization-workbench/wincondaprojenv"
-<!-- pip install gdown cython==3.0.9 numpy==1.23.5 ninja ultralytics==8.1.29 pillow pylabel==0.1.55 kiwisolver==1.4.5 pandas==2.2.1 -->
-# pip install torch==2.1.0 torchvision==0.16.0 torchaudio==2.1.0 --index-url https://download.pytorch.org/whl/cu121
 pip3 install torch torchvision torchaudio   
 pip install transformers==4.37.0 bitsandbytes==0.42.0 accelerate==0.27.2 ipywidgets
 ```
 
 
-pip install autoawq-kernels
+## WSL Installation Instructions
+```bash
+cd /mnt/c/Users/rs659/Desktop/quantization-workbench
+export PATH=~/anaconda3/bin:$PATH
+conda create --prefix=/mnt/c/Users/rs659/Desktop/quantization-workbench/wslenv python=3.9
+conda activate /mnt/c/Users/rs659/Desktop/quantization-workbench/wslenv
+conda install -p /mnt/c/Users/rs659/Desktop/quantization-workbench/wslenv ipykernel --update-deps --force-reinstall
+pip install torch==2.1.0 torchvision==0.16.0 torchaudio==2.1.0 --index-url https://download.pytorch.org/whl/cu121
+pip install git+https://github.com/casper-hansen/AutoAWQ.git
+pip install vllm
+pip install -U ipywidgets
+```
+
+
+
+

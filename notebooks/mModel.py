@@ -2,7 +2,6 @@ from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
 import torch
 import os
 from huggingface_hub import login
-# from vllm import LLM, SamplingParams
 
 class mModel:
 
@@ -11,16 +10,24 @@ class mModel:
         self.model_name = model_name
         self.quantization = quantization
         self.model_id = "mistralai/Mistral-7B-Instruct-v0.2"
+        # self.model_id = "deepseek-ai/deepseek-coder-1.3b-instruct"
+        # self.model_id = "CobraMamba/mamba-gpt-3b-v2"
+        # self.model_id = "TheBloke/Llama-2-7B-Chat-GGML"
+        # self.model_id = "TheBloke/Llama-2-7B-Chat-AWQ"
         self.tokenizer = None
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         self.model = None
         print(f"Initializing Model: {self.model_name}")
     
     def load_awq(self):
-        model_id = "TheBloke/zephyr-7B-alpha-AWQ"
-        model = AutoModelForCausalLM.from_pretrained(model_id, torch_dtype=torch.float32,device_map='auto')
+        from awq import AutoAWQForCausalLM
+        model_id = "TheBloke/Llama-2-7B-Chat-AWQ"
+        # model = AutoModelForCausalLM.from_pretrained(model_id, torch_dtype=torch.float32,device_map='auto')
+        model = AutoAWQForCausalLM.from_quantized(model_id, fuse_layers=True,
+                                          trust_remote_code=False, safetensors=True)
+
         # model = AutoModelForCausalLM.from_pretrained("TheBloke/zephyr-7B-alpha-AWQ", attn_implementation="flash_attention_2", device_map='auto')
-        print(f"Model Size: {model.get_memory_footprint() / (1024**3):,} GB")
+        # print(f"Model Size: {model.get_memory_footprint() / (1024**3):,} GB")
         self.model = model
 
     def load_bnb(self):
@@ -52,25 +59,28 @@ class mModel:
     
 
     def load_vllm(self):
-        # model_id = "TheBloke/zephyr-7B-alpha-AWQ"
-        # model = LLM(model=model_id, quantization="awq", dtype="half")
-        import torch
-        from transformers import AutoModelForCausalLM, AutoTokenizer, LlamaForCausalLM
+        
+        from vllm import LLM, SamplingParams
+        
+        model_id = "TheBloke/zephyr-7B-alpha-AWQ"
+        model = LLM(model=model_id, quantization="awq", dtype="half")
+        # import torch
+        # from transformers import AutoModelForCausalLM, AutoTokenizer, LlamaForCausalLM
 
-        model_id = "tiiuae/falcon-7b"
-        tokenizer = AutoTokenizer.from_pretrained(model_id)
+        # model_id = "tiiuae/falcon-7b"
+        # tokenizer = AutoTokenizer.from_pretrained(model_id)
 
-        model = AutoModelForCausalLM.from_pretrained(
-            model_id, 
-            torch_dtype=torch.bfloat16, 
-            attn_implementation="flash_attention_2",
-        )
+        # model = AutoModelForCausalLM.from_pretrained(
+        #     model_id, 
+        #     torch_dtype=torch.bfloat16, 
+        #     attn_implementation="flash_attention_2",
+        # )
         self.model = model
 
 
 
         # model = AutoModelForCausalLM.from_pretrained("TheBloke/zephyr-7B-alpha-AWQ", attn_implementation="flash_attention_2", device_map='auto')
-        print(f"Model Size: {model.get_memory_footprint() / (1024**3):,} bytes")
+        # print(f"Model Size: {model.get_memory_footprint() / (1024**3):,} bytes")
         self.model = model
 
 
@@ -112,7 +122,8 @@ class mModel:
         ]
         encoded_string = self.tokenizer.apply_chat_template(messages, return_tensors="pt")
 
-        model_inputs = encoded_string.to(self.model.device)
+        # model_inputs = encoded_string.to(self.model.device)
+        model_inputs = encoded_string.to('cuda')
         
         generated_ids = self.model.generate(model_inputs, pad_token_id=self.tokenizer.pad_token_id, max_new_tokens = 1000, do_sample=True)
         decoded = self.tokenizer.batch_decode(generated_ids)

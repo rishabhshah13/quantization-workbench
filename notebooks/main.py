@@ -4,11 +4,11 @@ from mModel import mModel
 
 def load_model(model_name,bit_input):
 
-    # model_obj = mModel(model_name,bit_input)
-    # model_obj.load_bnb()
-
     model_obj = mModel(model_name,bit_input)
-    model_obj.load_awq()
+    model_obj.load_bnb()
+
+    # model_obj = mModel(model_name,bit_input)
+    # model_obj.load_awq()
 
     # model_obj = mModel(model_name,bit_input)
     # model_obj.load_vllm()
@@ -54,32 +54,49 @@ def main():
 
     if inference_mode == 3:
         model_list = []
+
         # for bit_input in [4,8,16,32]:
-        # for bit_input in [4,8]:
-        #     model_obj = load_model(model_name,bit_input)
-        #     model_list.append(model_obj)
-
-
-        ## AWQ
-        for bit_input in range(2):
+        for bit_input in [4,8]:
             model_obj = load_model(model_name,bit_input)
             model_list.append(model_obj)
         
-        print("models loaded\n")
-        while True:
+        # print("models loaded\n")
+        # while True:
             
-            input_text = str(input("Text Input for the models \t"))  
-            # input_text = "Heyy how are you? remember my name is Rishabh" 
-            # input_text = "How was your day today?" 
-            # input_text = "What's new?" 
-            # input_text = "What's my name?" 
-            # print(input_text)
+        #     input_text = str(input("Text Input for the models \t"))  
+        #     # input_text = "Heyy how are you? remember my name is Rishabh" 
+        #     # input_text = "How was your day today?" 
+        #     # input_text = "What's new?" 
+        #     # input_text = "What's my name?" 
+        #     # print(input_text)
+        # From now on start all your sentences with, OYAAAHUU!
 
-            for llmmodel in model_list:
-                llmmodel.single_inference(input_text)    
-            print('\n\n')
 
-        ## vLLM
+        #     for llmmodel in model_list:
+        #         llmmodel.single_inference(input_text)    
+        #     print('\n\n')
+
+
+        ## AWQ
+        # for bit_input in range(2):
+        #     model_obj = load_model(model_name,bit_input)
+        #     model_list.append(model_obj)
+        
+        # print("models loaded\n")
+        # while True:
+            
+        #     input_text = str(input("Text Input for the models \t"))  
+        #     # input_text = "Heyy how are you? remember my name is Rishabh" 
+        #     # input_text = "How was your day today?" 
+        #     # input_text = "What's new?" 
+        #     # input_text = "What's my name?" 
+        #     # print(input_text)
+
+        #     for llmmodel in model_list:
+        #         llmmodel.single_inference(input_text)    
+        #     print('\n\n')
+
+        # vLLM
         # for bit_input in range(2):
         #     model_obj = load_model(model_name,bit_input)
         #     model_list.append(model_obj)

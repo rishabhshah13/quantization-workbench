@@ -26,22 +26,11 @@ def compare_models(user_input, model_name, bit_counts):
 
 iface = gr.Interface(
     fn=compare_models, 
-    inputs=["text", gr.Dropdown(["mistralai/Mistral-7B-Instruct-v0.2", "mistralai/Mistral-7B", "other_model"]), gr.CheckboxGroup(["4", "8", "16", "32"])], 
+    inputs=["text", gr.inputs.Dropdown(["mistralai/Mistral-7B-Instruct-v0.2", "mistralai/Mistral-7B", "other_model"]), gr.inputs.CheckboxGroup(["4", "8", "16", "32"])], 
     outputs="text",
     title="Quantization Workbench",
     description="Compare various LLM models with each other and their quantized versions."
 )
-
-
-iface2 = gr.Interface(
-    fn=compare_models, 
-    inputs=["text", gr.Dropdown(["mistralai/Mistral-7B-Instruct-v0.2", "mistralai/Mistral-7B", "other_model"]), gr.CheckboxGroup(["4", "8", "16", "32"])], 
-    outputs="text",
-    title="Quantization Workbench",
-    description="Compare various LLM models with each other and their quantized versions."
-)
-
 
 if __name__ == "__main__":
     iface.launch(debug=True)
-    iface2.launch(debug=True)
