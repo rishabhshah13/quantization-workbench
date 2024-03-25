@@ -1,2 +1,0 @@
-dataset,version,metric,mode,opencompass.models.huggingface.HuggingFace_lesliehd_Mistral-7B-Instruct-v0.2-16-bit-quantized
-commonsense_qa,c946f2,accuracy,gen,70.52
