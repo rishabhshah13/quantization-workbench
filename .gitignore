@@ -2,3 +2,4 @@ wincondaprojenv/*
 wslenv/*
 notebooks/__pycache__/*
 __pycache__/*
+flagged/*
