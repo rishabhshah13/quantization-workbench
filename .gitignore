@@ -1,2 +1,3 @@
 wincondaprojenv/*
 wslenv/*
+notebooks/__pycache__/*
