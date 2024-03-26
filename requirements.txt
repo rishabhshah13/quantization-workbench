@@ -1,4 +1,5 @@
 transformers==4.37.0
 bitsandbytes==0.43.0
 accelerate==0.27.2
-gradio
+httpx-0.24.1
+gradio==4.23.0
