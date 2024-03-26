@@ -1,5 +1,5 @@
-from scripts.mistral_quantize import load_model_quantized, load_tokenizer  # Import functions for loading quantized model and tokenizer
-from transformers import AutoTokenizer  # Import AutoTokenizer for tokenization
+from scripts.mistral_quantize import load_model_quantized, load_tokenizer as mistral_tokenizer  # Import functions for loading quantized model and tokenizer
+from scripts.llama_awq import load_awq, load_tokenizer as llama_tokenizer # Import functions for loading quantized model and tokenizer
 
 class Model:
     """Class to handle interaction with the language model."""
@@ -14,10 +14,17 @@ class Model:
         - model_context (list): Context information for the model.
         """
         # Load the quantized model and set device
-        self.model, self.device = load_model_quantized(model_name, bit_count)
-        
+        print(model_name)
+        if 'mistral' in model_name:
+            self.model, self.device = load_model_quantized(model_name, bit_count)
+            self.tokenizer = mistral_tokenizer(model_name)
+        elif 'Llama' in model_name:
+            self.model, self.device = load_awq(model_name)
+            self.tokenizer = llama_tokenizer(model_name)
+
         # Load the tokenizer
-        self.tokenizer = load_tokenizer(model_name)
+
+        # self.tokenizer = load_tokenizer(model_name)
         #self.tokenizer = AutoTokenizer.from_pretrained(model_name)
         
         # Initialize model context
