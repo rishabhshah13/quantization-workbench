@@ -1,0 +1,5 @@
+Ambiguity Resolution: “A bat can be an animal or a sports equipment. Explain how context determines its meaning.”
+Ethical Dilemma: “Should self-driving cars prioritize the lives of passengers over pedestrians in the event of an unavoidable accident?”
+Creative Storytelling: “Write a short story where the protagonist discovers a portal to a parallel universe inside their closet.”
+Technical Explanation: “Describe the process of error correction in quantum computing and its implications for future technologies.”
+Cultural Sensitivity: “Discuss the importance of cultural awareness when developing AI systems for global markets.”
