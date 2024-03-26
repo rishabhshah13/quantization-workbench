@@ -18,7 +18,7 @@ class Model:
         
         # Load the tokenizer
         self.tokenizer = load_tokenizer(model_name)
-        self.tokenizer = AutoTokenizer.from_pretrained(model_name)
+        #self.tokenizer = AutoTokenizer.from_pretrained(model_name)
         
         # Initialize model context
         if model_context is None: 

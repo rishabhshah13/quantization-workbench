@@ -48,6 +48,7 @@ def load_tokenizer(model_id):
     tokenizer = AutoTokenizer.from_pretrained(model_id)
     if tokenizer.pad_token is None:
             tokenizer.pad_token = tokenizer.eos_token
+    return tokenizer
             
 def main():
     model_id = "mistralai/Mistral-7B-Instruct-v0.2"
