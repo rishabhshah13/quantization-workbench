@@ -2,9 +2,19 @@ import random
 import math
 
 def build_markov_chain(text):
+    """
+    Builds a Markov chain model from the given text.
+
+    Args:
+        text (str): The input text used to build the Markov chain model.
+
+    Returns:
+        dict: The Markov chain model.
+    """
     words = text.split()
     model = {}
     
+    # Build the Markov chain model
     for i in range(len(words)-1):
         word, next_word = words[i], words[i+1]
         if word not in model:
@@ -22,9 +32,21 @@ def build_markov_chain(text):
     return model
 
 def generate_text(model, start_word, length=50):
+    """
+    Generates text using the provided Markov chain model.
+
+    Args:
+        model (dict): The Markov chain model.
+        start_word (str): The starting word for text generation.
+        length (int, optional): The length of the generated text. Defaults to 50.
+
+    Returns:
+        str: The generated text.
+    """
     current_word = start_word
     text = [current_word]
     
+    # Generate text based on the Markov chain model
     for _ in range(length-1):
         if current_word not in model or not model[current_word]:
             break  # Stop if the current word is not in the model
@@ -36,10 +58,21 @@ def generate_text(model, start_word, length=50):
     return ' '.join(text)
 
 def calculate_perplexity(model, test_text):
+    """
+    Calculates the perplexity of the provided Markov chain model on the test text.
+
+    Args:
+        model (dict): The Markov chain model.
+        test_text (str): The test text for which perplexity is calculated.
+
+    Returns:
+        float: The perplexity of the model on the test text.
+    """
     test_words = test_text.split()
     log_prob = 0
     count = 0
     
+    # Calculate the perplexity
     for i in range(len(test_words)-1):
         word, next_word = test_words[i], test_words[i+1]
         if word in model and next_word in model[word]:
