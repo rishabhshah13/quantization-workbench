@@ -45,7 +45,7 @@ class Model:
         model_inputs = encodeds.to(self.device)
         
         # Generate response from the model
-        generated_ids = self.model.generate(model_inputs, pad_token_id=self.tokenizer.pad_token_id, max_new_tokens=1000, do_sample=True)
+        generated_ids = self.model.generate(model_inputs, pad_token_id=self.tokenizer.pad_token_id, max_new_tokens=100, do_sample=True)
         decoded = self.tokenizer.batch_decode(generated_ids, clean_up_tokenization_spaces=True)
         
         # Append model output to context
