@@ -74,7 +74,7 @@ def compare_models(user_input, model_name, bit_counts):
 # Define input components for the interface
 inputs = [
     "text",  # Text input
-    gr.Dropdown(["mistralai/Mistral-7B-Instruct-v0.2", "mistralai/Mistral-7B", "other_model"]),  # Dropdown for model selection
+    gr.Dropdown(["mistralai/Mistral-7B-Instruct-v0.2","TheBloke/Llama-2-7B-Chat-AWQ", "mistralai/Mistral-7B", "other_model"]),  # Dropdown for model selection
     gr.CheckboxGroup(["4", "8", "16", "32"]),  # Checkbox group for selecting quantization levels
 ]
 
