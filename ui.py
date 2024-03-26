@@ -74,4 +74,4 @@ iface1 = gr.Interface(
 
 # Launch the interface if this script is executed directly
 if __name__ == "__main__":
-    iface1.launch(debug=True)  # Launch the interface in debug mode
+    iface1.launch(debug=True, share=True)  # Launch the interface in debug mode
