@@ -16,6 +16,8 @@ cd AutoAWQ_kernels
 !pip install -e . 
 ```
 
+If you are unable to clone the repo on Windows due to Filename too long error, run the following:
+```git config --global core.longpaths true```
 
 
 

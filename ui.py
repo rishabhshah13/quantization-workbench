@@ -7,7 +7,6 @@ from scripts.Model import Model # Import the Model class from model.py
 models = {}  # Dictionary to store instantiated models
 context = {}  # Dictionary to store context information for each model
 
-
 def compare_models(user_input, model_name, bit_counts):
     """
     Compares models with different quantization levels and returns their outputs.
@@ -18,9 +17,8 @@ def compare_models(user_input, model_name, bit_counts):
     - bit_counts (list of str): List of quantization levels to compare.
 
     Returns:
-    - tuple: A tuple containing the outputs of the models at each quantization level.
+    - list: A list containing the outputs of the models at each quantization level.
     """
-    outputs = [None] * 4  # Initialize a list of 4 None values to store model outputs
     try:
         for i, bit_count in enumerate(bit_counts):
             # Generate a unique key for each model based on model name and quantization level
@@ -37,7 +35,16 @@ def compare_models(user_input, model_name, bit_counts):
                 models[key] = Model(model_name, int(bit_count), model_context)
             
             # Get output from the model and store it in outputs list
-            outputs[i] = models[key].get_output(user_input)
+            model_output = models[key].get_output(user_input)
+            latest_response = models[key].get_latest_response(model_output)
+            
+            # If the model's context already exists in the outputs list, append the new user input and response
+            if key in context.keys():
+                outputs[i].append(['user', user_input])
+                outputs[i].append([key, latest_response])
+            # Otherwise, create a new entry in the outputs list
+            else:
+                outputs[i] = [['user', user_input], [key, latest_response]]
 
             # Update context for the model
             context[key] = models[key].context
@@ -49,8 +56,8 @@ def compare_models(user_input, model_name, bit_counts):
         # Print and log any exceptions that occur during model comparison
         print(e)
         traceback.print_exc()
+    return outputs  # Return the list of outputs
 
-    return tuple(outputs)  # Convert the list to a tuple and return
 
 
 # Define input components for the interface
@@ -61,7 +68,7 @@ inputs = [
 ]
 
 # Define output components for the interface
-outputs = [gr.Textbox() for _ in range(4)]  # Textboxes to display model outputs
+outputs = [gr.Chatbot() for _ in range(4)]  # Chatbots to display model outputs
 
 # Create Gradio interface with the defined inputs and outputs
 iface1 = gr.Interface(
@@ -74,4 +81,4 @@ iface1 = gr.Interface(
 
 # Launch the interface if this script is executed directly
 if __name__ == "__main__":
-    iface1.launch(debug=True, share=True)  # Launch the interface in debug mode
+    iface1.launch(debug=True)  # Launch the interface in debug mode

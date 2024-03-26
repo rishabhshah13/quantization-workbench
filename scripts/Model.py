@@ -45,10 +45,32 @@ class Model:
         model_inputs = encodeds.to(self.device)
         
         # Generate response from the model
-        generated_ids = self.model.generate(model_inputs, pad_token_id=self.tokenizer.pad_token_id, max_new_tokens=100, do_sample=True)
+        generated_ids = self.model.generate(model_inputs, pad_token_id=self.tokenizer.pad_token_id, max_new_tokens=1000, do_sample=True)
         decoded = self.tokenizer.batch_decode(generated_ids, clean_up_tokenization_spaces=True)
         
         # Append model output to context
         self.context.append({"role": "assistant", "content": decoded[0]})
         
         return decoded[0]  # Return the generated response
+    
+    def get_latest_response(self, conversation):
+        """
+        Extract the latest response from the conversation history.
+
+        Parameters:
+        - conversation (str): The conversation history.
+
+        Returns:
+        - str: The latest response in the conversation.
+        """
+        # Split the conversation by the [/INST] tag
+        split_conversation = conversation.split("[/INST]")
+
+        # The latest response is after the last [/INST] tag
+        latest_response = split_conversation[-1]
+
+        # Remove leading and trailing whitespace
+        latest_response = latest_response.strip()
+
+        return latest_response
+
