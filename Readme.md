@@ -1,78 +1,56 @@
-# Quantization Workbench
-This project provides a tool for benchmarking and comparing different quantized versions of models in terms of their output and energy consumption.
+# Multi-modal Local File Search & Recommendation Engine 
 
-## Introduction to Quantization
-Quantization is a process that reduces the number of bits that represent a number. In the context of deep learning, quantization is a technique used to perform computation and storage in lower precision. This results in smaller model size and faster computation, often with minimal impact on the model’s accuracy.
+## Introduction
+This project is a multi-modal local file search and recommendation engine. It solves the problem of unintelligent file search and recommendation in current search engines on various operating systems, like Windows, Mac, and Linux. 
 
-## Overview of the Tool
-The tool consists of several Python scripts that work together to load a model, quantize it to a specified bit count, and then generate responses from the model. The tool also measures the size of the model in memory, which can be used as a proxy for energy consumption.
+For example, when you search for `my latest resume` in the search bar, the search engine will return all files with the name `resume` in the file name, but it will not return the file `my latest resume` if the file name is not `my_latest_resume`, and it will not retuen files `CV` or `curriculum vitae` even if they are the same file as `resume`. This project aims to solve this problem by using local runnable LLM model to recommend keywords based on user queries.
 
-## Key Components
-1. mistral_quantize.py: This script contains the load_model_quantized function, which loads a pre-trained model and quantizes it to a specified bit count. The function uses the BitsAndBytesConfig class from the transformers library to configure the quantization settings.
+Also, if you want to search for images, audio, or video files, the current search engine will not be able to do that. This project will solve this problem by using multi-modal search and recommendation techniques.
 
-2. Model.py: This script defines a Model class that handles interaction with the language model. The class has methods to generate model output based on user input (get_output) and to extract the latest response from the conversation history (get_latest_response).
 
-3. main function: The main function in the mistral_quantize.py script prompts the user to enter the number of bits for quantization, loads the model and tokenizer, and then enters a loop where it continually prompts the user for input, generates a response from the model, and prints the response.
+## Features
+- Multi-modal search: using [Weaviate](https://weaviate.io/) as the vector search engine, where we set ImageBind as the vectorizer for every file type, including text, image, audio, and video.
+- Recommendation: using fine-tuned `TinyLlama-1.1B` model to recommend keywords based and structured data based on user queries.
 
-4. UI: ui.py sets up a UI using gradio to simultaneously prompt and compare the outputs and energy consumptions of different quantized models simultaneously in a web chatbot interface for each separate selected quantized model.
+## Overall Architecture
 
-## Installation Instructions
+![alt text](<overview.png>)
 
-Follow the steps below to setup the repo based on your environment:
-
-### Conda Installation Instructions
-
+## How to use
+1. Clone the repository
 ```bash
-conda create --prefix "C:\\Users\\rs659\\Desktop\\quantization-workbench\\wincondaprojenv" python=3.9
-conda activate "C:\\Users\\rs659\\Desktop\\quantization-workbench\\wincondaprojenv"
+git clone https://github.com/zihanxing/Multi-Modal-Local-File-Search-Engine.git
+```
+2. Creat a virtual environment(using conda in this case) for the project
+```bash
+conda create -n local-search-engine
+conda activate local-search-engine
+```
+3. Install the required packages
+```bash
 pip install -r requirements.txt
-pip install torch==2.1.0 torchvision==0.16.0 torchaudio==2.1.0 --index-url https://download.pytorch.org/whl/cu121
-pip install -e git+https://github.com/casper-hansen/AutoAWQ_kernels@83d1f4b326a9067d0f94f089ef1bb47cf5377134#egg=autoawq_kernels
-git clone https://github.com/casper-hansen/AutoAWQ_kernels 
+```
+4. Compose the docker containers to start the Weaviate server
+```bash
+docker compose up -d
+```
+5. Run the streamlit app
+```bash
+streamlit run app.py
 ```
 
+## Limitations
+- Practical compute restrictions; GPU essentially required to match recommendation speed of traditional search
 
-## Run UI and Compare Models
+- Model can not process keywords it has not seen before (e.g. Huggingface) - small model does not have enough knowledge
 
-To launch the UI and start chattting with the different models simultaneously, simply run the UI script:
+- Ingestion is a required step as and when new data is added
 
-```python -m ui```
+## Future Work
 
-## How the Tool Works
+- Improve the quality of fine-tuning data to improve recommendation quality, so that the model can recommend more accurate keywords.
 
-The tool works by first loading a pre-trained model using the load_model_quantized function. The user specifies the number of bits for quantization (4, 8, 16, or 32). If the model has been previously quantized and saved, it is loaded directly. Otherwise, the model is quantized according to the specified bit count using the BitsAndBytesConfig class, and then saved for future use.
+- Implement a more efficient ingestion pipeline to automatically ingest new data.
 
-The Model class is used to handle interaction with the language model. The get_output method appends the user input to the model context, tokenizes the input, generates a response from the model, and then appends the model output to the context. The get_latest_response method is used to extract the latest response from the conversation history.
 
-The main function prompts the user to enter the number of bits for quantization, loads the model and tokenizer, and then enters a loop where it continually prompts the user for input, generates a response from the model, and prints the response. The size of the model in memory is printed after the model is loaded, which can be used as a measure of energy consumption.
 
-## Example Usage
-
-```python
-from scripts.mistral_quantize import load_model_quantized, load_tokenizer
-
-model_id = "mistralai/Mistral-7B-Instruct-v0.2"
-bit_input = 8  # Specify the number of bits for quantization
-
-# Load the quantized model and tokenizer
-model, device = load_model_quantized(model_id, bit_input)
-tokenizer = load_tokenizer(model_id)
-
-# Create an instance of the Model class
-model_instance = Model(model, tokenizer)
-
-# Generate a response from the model
-user_input = "Tell me about AI"
-response = model_instance.get_output(user_input)
-print("Model response:", response)
-```
-
-This will load the specified model, quantize it to 8 bits, and then generate a response to the input “Tell me about AI”. The response is then printed to the console. The size of the model in memory is also printed after the model is loaded.
-
-## Conclusion
-This tool provides a simple and effective way to benchmark and compare different quantized versions of models. By measuring the size of the model in memory and the quality of the model’s output, we can gain insights into the trade-offs between model size, computation speed, and model performance. This can be particularly useful in resource-constrained environments where model size and computation speed are critical. The tool provides a way to compare energy consumption of these models in any context/environment in which they are run.
-
-## References
-Hugging Face Transformers
-
-Quantization in PyTorch
